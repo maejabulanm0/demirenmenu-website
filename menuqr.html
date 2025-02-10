@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Menu</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        h1 {
+            color: #ff6600;
+            font-size: 2.5em;
+        }
+        .menu-category {
+            margin: 20px 0;
+            font-size: 1.8em;
+            font-weight: bold;
+            background-color: #ff6600;
+            color: white;
+            padding: 15px;
+            border-radius: 15px;
+        }
+        .menu {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .menu-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            justify-content: center;
+            max-width: 900px;
+        }
+        .menu-item {
+            border: 1px solid #ddd;
+            padding: 15px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        .menu-item:hover {
+            transform: scale(1.05);
+        }
+        .menu-item img {
+            width: 100%;
+            border-radius: 10px;
+        }
+        button {
+            background-color: #ff6600;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background-color: #cc5200;
+        }
+        #cart-container {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>QR Code Menu</h1>
+    <div id="menu"></div>
+    <div id="cart-container">
+        <h2>Your Order</h2>
+        <ul id="cart"></ul>
+        <p><strong>Total:</strong> ₱<span id="total">0.00</span></p>
+        <button onclick="placeOrder()">Place Order</button>
+    </div>
+    <h3>Special Requests / Delivery Time</h3>
+    <textarea id="specialRequests" rows="12" cols="86" placeholder="Enter any special requests or preferred delivery time..."></textarea>
+    <script>
+        const menuCategories = {
+            "Main Dishes": [
+                { name: "Adobo", price: 120, image: "adobo.jpg" },
+                { name: "Sinigang", price: 150, image: "sinigang.jpg" },
+                { name: "Lechon", price: 300, image: "lechon.jpg" },
+                { name: "Kare-Kare", price: 180, image: "karekare.jpg" },
+                { name: "Bicol Express", price: 140, image: "bicolexpress.jpg" }
+            ],
+            "Rice": [
+                { name: "Plain Rice", price: 20, image: "plainrice.jpg" },
+                { name: "Garlic Rice", price: 30, image: "garlicrice.jpg" },
+                { name: "Fried Rice", price: 50, image: "friedrice.jpg" },
+                { name: "Brown Rice", price: 40, image: "brownrice.jpg" },
+                { name: "Sticky Rice", price: 60, image: "stickyrice.jpg" }
+            ],
+            "Desserts": [
+                { name: "Halo-Halo", price: 120, image: "halohalo.jpg" },
+                { name: "Leche Flan", price: 90, image: "lecheflan.jpg" },
+                { name: "Turon", price: 50, image: "turon.jpg" },
+                { name: "Maja Blanca", price: 80, image: "majablanca.jpg" },
+                { name: "Bibingka", price: 100, image: "bibingka.jpg" }
+            ],
+            "Beverages": [
+                { name: "Iced Tea", price: 50, image: "icedtea.jpg" },
+                { name: "Sago't Gulaman", price: 60, image: "sagotgulaman.jpg" },
+                { name: "Calamansi Juice", price: 45, image: "calamansi-juice.jpg" },
+                { name: "Buko Juice", price: 55, image: "bukojuice.jpg" },
+                { name: "Mango Shake", price: 70, image: "mangoshake.jpg" }
+            ]
+        };
+        
+        const menuDiv = document.getElementById("menu");
+        const cart = [];
+        
+        function renderMenu() {
+            for (let category in menuCategories) {
+                menuDiv.innerHTML += `<div class='menu-category'>${category}</div>`;
+                let itemsHTML = "<div class='menu-items'>";
+                menuCategories[category].forEach((item, index) => {
+                    itemsHTML += `
+                        <div class="menu-item">
+                            <img src="${item.image}" alt="${item.name}">
+                            <h3>${item.name}</h3>
+                            <p>₱${item.price}</p>
+                            <button onclick="addToCart('${category}', ${index})">Order</button>
+                        </div>
+                    `;
+                });
+                itemsHTML += "</div>";
+                menuDiv.innerHTML += itemsHTML;
+            }
+        }
+        
+        function addToCart(category, index) {
+            cart.push(menuCategories[category][index]);
+            updateCart();
+        }
+        
+        function updateCart() {
+            let cartList = document.getElementById("cart");
+            let total = document.getElementById("total");
+            cartList.innerHTML = "";
+            let sum = 0;
+            cart.forEach((item, idx) => {
+                cartList.innerHTML += `<li>${item.name} - ₱${item.price} <button onclick="removeFromCart(${idx})">Cancel</button></li>`;
+                sum += item.price;
+            });
+            total.innerText = sum.toFixed(2);
+        }
+        
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCart();
+        }
+        
+        function placeOrder() {
+            let specialRequests = document.getElementById("specialRequests").value;
+            alert("Thank you for your order!\nSpecial Requests: " + specialRequests);
+            location.reload();
+        }
+        
+        renderMenu();
+    </script>
+</body>
+</html>
