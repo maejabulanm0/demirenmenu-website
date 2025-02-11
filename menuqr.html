@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QR Code Menu</title>
+    <title>Demiren Hotel and Restaurant Menu</title>
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -12,14 +12,14 @@
             color: #333;
         }
         h1 {
-            color: #ff6600;
+            color: #0066b2;
             font-size: 2.5em;
         }
         .menu-category {
             margin: 20px 0;
             font-size: 1.8em;
             font-weight: bold;
-            background-color: #ff6600;
+            background-color: #0066b2;
             color: white;
             padding: 15px;
             border-radius: 15px;
@@ -53,7 +53,7 @@
             border-radius: 10px;
         }
         button {
-            background-color: #ff6600;
+            background-color: #0066b2;
             color: white;
             border: none;
             padding: 10px 15px;
@@ -62,7 +62,7 @@
             transition: background 0.3s;
         }
         button:hover {
-            background-color: #cc5200;
+            background-color: #004080;
         }
         #cart-container {
             background: white;
@@ -72,16 +72,28 @@
             max-width: 500px;
             margin: auto;
         }
+        #search-container {
+            margin: 20px;
+        }
+        #search {
+            padding: 10px;
+            width: 300px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
-    <h1>QR Code Menu</h1>
+    <h1>Demiren Hotel and Restaurant Menu</h1>
+    <div id="search-container">
+        <input type="text" id="search" placeholder="Search menu..." onkeyup="searchMenu()">
+    </div>
     <div id="menu"></div>
     <div id="cart-container">
         <h2>Your Order</h2>
         <ul id="cart"></ul>
         <p><strong>Total:</strong> ₱<span id="total">0.00</span></p>
-        <button onclick="placeOrder()">Place Order</button>
+        <button onclick="confirmOrder()">Place Order</button>
     </div>
     <h3>Special Requests / Delivery Time</h3>
     <textarea id="specialRequests" rows="12" cols="86" placeholder="Enter any special requests or preferred delivery time..."></textarea>
@@ -93,6 +105,13 @@
                 { name: "Lechon", price: 300, image: "lechon.jpg" },
                 { name: "Kare-Kare", price: 180, image: "karekare.jpg" },
                 { name: "Bicol Express", price: 140, image: "bicolexpress.jpg" }
+            ],
+            "Beverages": [
+                { name: "Iced Tea", price: 50, image: "icedtea.jpg" },
+                { name: "Calamansi Juice", price: 45, image: "calamansi-juice.jpg" },
+                { name: "Sago't Gulaman", price: 60, image: "sagotgulaman.jpg" },
+                { name: "Buko Juice", price: 55, image: "bukojuice.jpg" },
+                { name: "Mango Shake", price: 70, image: "mangoshake.jpg" }
             ],
             "Rice": [
                 { name: "Plain Rice", price: 20, image: "plainrice.jpg" },
@@ -107,26 +126,20 @@
                 { name: "Turon", price: 50, image: "turon.jpg" },
                 { name: "Maja Blanca", price: 80, image: "majablanca.jpg" },
                 { name: "Bibingka", price: 100, image: "bibingka.jpg" }
-            ],
-            "Beverages": [
-                { name: "Iced Tea", price: 50, image: "icedtea.jpg" },
-                { name: "Sago't Gulaman", price: 60, image: "sagotgulaman.jpg" },
-                { name: "Calamansi Juice", price: 45, image: "calamansi-juice.jpg" },
-                { name: "Buko Juice", price: 55, image: "bukojuice.jpg" },
-                { name: "Mango Shake", price: 70, image: "mangoshake.jpg" }
-            ]
+           ]
         };
         
         const menuDiv = document.getElementById("menu");
         const cart = [];
         
         function renderMenu() {
+            menuDiv.innerHTML = "";
             for (let category in menuCategories) {
                 menuDiv.innerHTML += `<div class='menu-category'>${category}</div>`;
                 let itemsHTML = "<div class='menu-items'>";
                 menuCategories[category].forEach((item, index) => {
                     itemsHTML += `
-                        <div class="menu-item">
+                        <div class="menu-item" data-name="${item.name.toLowerCase()}">
                             <img src="${item.image}" alt="${item.name}">
                             <h3>${item.name}</h3>
                             <p>₱${item.price}</p>
@@ -137,6 +150,15 @@
                 itemsHTML += "</div>";
                 menuDiv.innerHTML += itemsHTML;
             }
+        }
+        
+        function searchMenu() {
+            let input = document.getElementById("search").value.toLowerCase();
+            let items = document.querySelectorAll(".menu-item");
+            items.forEach(item => {
+                let name = item.getAttribute("data-name");
+                item.style.display = name.includes(input) ? "block" : "none";
+            });
         }
         
         function addToCart(category, index) {
@@ -161,10 +183,19 @@
             updateCart();
         }
         
-        function placeOrder() {
+        function confirmOrder() {
+            if (cart.length === 0) {
+                alert("You havent order anything yet.");
+                return;
+            }
             let specialRequests = document.getElementById("specialRequests").value;
-            alert("Thank you for your order!\nSpecial Requests: " + specialRequests);
-            location.reload();
+            let orderSummary = cart.map(item => `${item.name} - ₱${item.price}`).join("\n");
+            let total = document.getElementById("total").innerText;
+            let confirmation = `Your Order:\n${orderSummary}\nTotal: ₱${total}\nSpecial Requests: ${specialRequests}\n\nProceed with the order?`;
+            if (confirm(confirmation)) {
+                alert("Order placed successfully! It has been sent to the front desk.");
+                location.reload();
+            }
         }
         
         renderMenu();
