@@ -102,7 +102,7 @@ h1 {
 }
 
 .status-delivered {
-    color: orange;
+    color: #00308F;
 }
 
 /* Floating Orange Button */
@@ -125,7 +125,7 @@ h1 {
 }
 
 .menu-item .floating-button:hover {
-    background: darkorange;
+    background: #002D62;
 }
 
 /* Responsive Design */
