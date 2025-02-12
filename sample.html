@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demiren Hotel and Restaurant Menu</title>
+    <link rel="stylesheet" href="example.css">           
+</head>
+<body>
+    <h1>Demiren Hotel and Restaurant Menu</h1>
+    <div id="search-container">
+        <input type="text" id="search" placeholder="Search menu..." onkeyup="searchMenu()">
+    </div>
+    <div id="menu"></div>
+    <div id="cart-container">
+        <h2>Your Order</h2>
+        <ul id="cart"></ul>
+        <p><strong>Total:</strong> ₱<span id="total">0.00</span></p>
+        <button onclick="confirmOrder()">Place Order</button>
+    </div>
+    <h3>Special Requests / Delivery Time</h3>
+    <textarea id="specialRequests" rows="12" cols="86" placeholder="Enter any special requests or preferred delivery time..."></textarea>
+    <script>
+        const menuCategories = {
+            "Sizzlings (Best Seller)": [
+                { name: "Sizzling Beef Tenderloin", price: 250, image: "beef_tenderloin.jpg" },
+                { name: "Sizzling Chicken", price: 200, image: "sizzling_chicken.jpg" },
+                { name: "Sizzling Gambas", price: 230, image: "sizzling_gambas.jpg" },
+                { name: "Sizzling Squid", price: 220, image: "sizzling_squid.jpg" },
+                { name: "Sizzling Sisig (Pork/Tuna)", price: 210, image: "sizzling_sisig.jpg" },
+                { name: "Sizzling Bangus (Boneless)", price: 200, image: "sizzling_bangus.jpg" },
+                { name: "Sizzling Tangigue", price: 260, image: "sizzling_tangigue.jpg" },
+                { name: "Sizzling Bariles", price: 240, image: "sizzling_bariles.jpg" }
+            ],
+            "Kambingan": [
+                { name: "Papaitan", price: 260, image: "papaitan.jpg" },
+                { name: "Adobo Kambing", price: 345, image: "adobo_kambing.jpg" },
+                { name: "Caldereta", price: 345, image: "Caldereta.jpg", bestSeller: true }
+            ],
+            "Pulutan": [
+                { name: "Chicharon Bulaklak", price: 230,image: "chicharon_bulaklak.jpg"  },
+                { name: "Kinilaw (Fish)", price: 300, image: "kinilaw.jpg"  },
+                { name: "Calamares", price: 260, image: "calamares.jpg"  },
+                { name: "Camaron Rebosado", price: 260, image: "rebosado.jpg"  },
+                { name: "Sinugba (Pork)", price: 260, image: "sinugba.jpg" },
+                { name: "Sinuglaw", price: 445, image: "sinuglaw.jpg"  },
+                { name: "Patatim", price: 550, image: "patatim.jpg"  },
+                { name: "Crispy Pata", price: 550, image: "crispy_pata.jpg" ,bestSeller: true },
+                { name: "Garlic Mushroom", price: 180,image: "garlic_mushroom.jpg"  },
+                { name: "Sashime", price: 290, image: "Sashime.jpg"  }
+            ],
+            "Drinks": [
+                { name: "Coke Light", price: 75, image: "coke.jpg"  },
+                { name: "Coke in Can", price: 75, image: "coke_can.jpg"  },
+                { name: "Sprite in Can", price: 75, image: "sprite_can.jpg" },
+                { name: "Royal in Bottle", price: 30,image: "royal_bottle.jpg"  },
+                { name: "Sprite in Bottle", price: 30,image: "sprite_bottle.jpg"  },
+                { name: "Coke in Bottle", price: 30, image: "coke_bottle.jpg"  },
+                { name: "Mineral Water 1L", price: 40, image: "water.jpg"  },
+                { name: "C2 Green Tea", price: 30, image: "c2.jpg"  },
+                { name: "Gatorade", price: 70, image: "gatorated.jpg"  },
+                { name: "Iced Tea", price: 30, image: "iced_tea.jpg" },
+                { name: "Hot Tea", price: 30, image: "hot_tea.jpg" },
+                { name: "Brewed Coffee", price: 75, image: "brewed_coffe.jpg"  },
+                { name: "Milo", price: 30, image: "milo.jpg"  },
+                { name: "Coffee w/ Cream", price: 30, image: "coffee.jpg"  },
+                { name: "Mango Juice", price: 70, image: "mango_juice.jpg"  },
+                { name: "Four Seasons", price: 70, image: "fourseson.jpg"  },
+                { name: "Pineapple Juice", price: 70, image: "pineapple.jpg"  },
+                { name: "Pineapple Orange Juice", price: 70, image: "porange.jpg"  },
+                { name: "Flavored Shake", price: 70, image: "Shake.jpg"  }
+            ],
+            
+            "Beverages": [
+                { name: "Iced Tea", price: 50, image: "icedtea.jpg" },
+                { name: "Calamansi Juice", price: 45, image: "calamansi-juice.jpg" },
+                { name: "Sago't Gulaman", price: 60, image: "sagotgulaman.jpg" },
+                { name: "Buko Juice", price: 55, image: "bukojuice.jpg" },
+                { name: "Mango Shake", price: 70, image: "mangoshake.jpg" }
+            ],
+            "Rice": [
+                { name: "Shanghai Rice / Platter", price: 240, image: "plainrice.jpg" },
+                { name: "Garlic Rice / Platter", price: 150, image: "garlicrice.jpg" },
+                { name: "Fried Rice / Platter", price: 150, image: "friedrice.jpg" },
+                { name: "Plain Rice / Platter", price: 135, image: "brownrice.jpg" },
+                { name: "Garlic Rice / Cup", price: 48, image: "stickyrice.jpg" },
+                { name: "Fried Rice / Cup", price: 48, image: "stickyrice.jpg" },
+                { name: "Plain Rice / Rice", price: 25, image: "stickyrice.jpg" }
+        ],
+        "Vagetable": [
+                { name: "Four Season", price: 290, image: "plainrice.jpg" },
+                { name: "Vegetable Puyong", price: 190, image: "garlicrice.jpg" },
+                { name: "Chopsuy", price: 240, image: "friedrice.jpg" },
+                { name: "Crispy Kangkong", price: 175, image: "brownrice.jpg" },
+                { name: "Adobong Kangkong", price: 175, image: "stickyrice.jpg" },
+                { name: "Ampalaya w/Beef", price: 190, image: "stickyrice.jpg" },
+                { name: "Pechay Guisado", price: 160, image: "stickyrice.jpg" },
+                { name: "Pinakbet w/ Bagoong", price: 240, image: "stickyrice.jpg" }
+
+        ],
+        "Pork": [
+                { name: "Adobong Baboy", price: 240, image: "plainrice.jpg" },
+                { name: "Pork Afritada", price: 240, image: "garlicrice.jpg" },
+                { name: "Mixed Afritada", price: 240, image: "friedrice.jpg" },
+                { name: "Sweet & Sour Pork", price: 240, image: "brownrice.jpg" },
+                { name: "Pork Caldereta", price: 240, image: "stickyrice.jpg" },
+                { name: "Pork Liver", price: 240, image: "stickyrice.jpg" },
+                { name: "Fried/Grilled Pork Chop", price: 240, image: "stickyrice.jpg" },
+                { name: "Lechon Kawali", price: 240, image: "stickyrice.jpg" }
+
+        ],
+            
+
+
+            
+            "Desserts": [
+                { name: "Halo-Halo", price: 120, image: "halohalo.jpg" },
+                { name: "Leche Flan", price: 90, image: "lecheflan.jpg" },
+                { name: "Turon", price: 50, image: "turon.jpg" },
+                { name: "Maja Blanca", price: 80, image: "majablanca.jpg" },
+                { name: "Bibingka", price: 100, image: "bibingka.jpg" }
+           ]
+        };
+        
+        const menuDiv = document.getElementById("menu");
+        const cart = [];
+        
+        function renderMenu() {
+            menuDiv.innerHTML = "";
+            for (let category in menuCategories) {
+                menuDiv.innerHTML += `<div class='menu-category'>${category}</div>`;
+                let itemsHTML = "<div class='menu-items'>";
+                menuCategories[category].forEach((item, index) => {
+                    itemsHTML += `
+                        <div class="menu-item" data-name="${item.name.toLowerCase()}">
+                            <img src="${item.image}" alt="${item.name}">
+                            <h3>${item.name}</h3>
+                            <p>₱${item.price}</p>
+                            <button onclick="addToCart('${category}', ${index})">Order</button>
+                        </div>
+                    `;
+                });
+                itemsHTML += "</div>";
+                menuDiv.innerHTML += itemsHTML;
+            }
+        }
+        
+        function searchMenu() {
+            let input = document.getElementById("search").value.toLowerCase();
+            let items = document.querySelectorAll(".menu-item");
+            items.forEach(item => {
+                let name = item.getAttribute("data-name");
+                item.style.display = name.includes(input) ? "block" : "none";
+            });
+        }
+        
+        function addToCart(category, index) {
+            cart.push(menuCategories[category][index]);
+            updateCart();
+        }
+        
+        function updateCart() {
+            let cartList = document.getElementById("cart");
+            let total = document.getElementById("total");
+            cartList.innerHTML = "";
+            let sum = 0;
+            cart.forEach((item, idx) => {
+                cartList.innerHTML += `<li>${item.name} - ₱${item.price} <button onclick="removeFromCart(${idx})">Cancel</button></li>`;
+                sum += item.price;
+            });
+            total.innerText = sum.toFixed(2);
+        }
+        
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCart();
+        }
+        
+        
+        function confirmOrder() {
+            if (cart.length === 0) {
+                alert("You havent order anything yet.");
+                return;
+            }
+            let specialRequests = document.getElementById("specialRequests").value;
+            let orderSummary = cart.map(item => `${item.name} - ₱${item.price}`).join("\n");
+            let total = document.getElementById("total").innerText;
+            let confirmation = `Your Order:\n${orderSummary}\nTotal: ₱${total}\nSpecial Requests: ${specialRequests}\n\nProceed with the order?`;
+            if (confirm(confirmation)) {
+                alert("Order placed successfully! It has been sent to the front desk.");
+                location.reload();
+            }
+        }
+        
+        renderMenu();
+    </script>
+</body>
+</html>
