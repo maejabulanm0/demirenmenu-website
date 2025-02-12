@@ -4,84 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Demiren Hotel and Restaurant Menu</title>
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            text-align: center;
-            background-color: #f4f4f4;
-            color: #333;
-        }
-        h1 {
-            color: #0066b2;
-            font-size: 2.5em;
-        }
-        .menu-category {
-            margin: 20px 0;
-            font-size: 1.8em;
-            font-weight: bold;
-            background-color: #0066b2;
-            color: white;
-            padding: 15px;
-            border-radius: 15px;
-        }
-        .menu {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .menu-items {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            justify-content: center;
-            max-width: 900px;
-        }
-        .menu-item {
-            border: 1px solid #ddd;
-            padding: 15px;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            transition: transform 0.3s;
-        }
-        .menu-item:hover {
-            transform: scale(1.05);
-        }
-        .menu-item img {
-            width: 100%;
-            border-radius: 10px;
-        }
-        button {
-            background-color: #0066b2;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        button:hover {
-            background-color: #004080;
-        }
-        #cart-container {
-            background: white;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.1);
-            max-width: 500px;
-            margin: auto;
-        }
-        #search-container {
-            margin: 20px;
-        }
-        #search {
-            padding: 10px;
-            width: 300px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-    </style>
+    <link rel="stylesheet" href="menuqr.css">
+            
+           
 </head>
 <body>
     <h1>Demiren Hotel and Restaurant Menu</h1>
@@ -99,13 +24,55 @@
     <textarea id="specialRequests" rows="12" cols="86" placeholder="Enter any special requests or preferred delivery time..."></textarea>
     <script>
         const menuCategories = {
-            "Main Dishes": [
-                { name: "Adobo", price: 120, image: "adobo.jpg" },
-                { name: "Sinigang", price: 150, image: "sinigang.jpg" },
-                { name: "Lechon", price: 300, image: "lechon.jpg" },
-                { name: "Kare-Kare", price: 180, image: "karekare.jpg" },
-                { name: "Bicol Express", price: 140, image: "bicolexpress.jpg" }
+            "Sizzlings (Best Seller)": [
+                { name: "Sizzling Beef Tenderloin", price: 250, image: "beef_tenderloin.jpg" },
+                { name: "Sizzling Chicken", price: 200, image: "sizzling_chicken.jpg" },
+                { name: "Sizzling Gambas", price: 230, image: "sizzling_gambas.jpg" },
+                { name: "Sizzling Squid", price: 220, image: "sizzling_squid.jpg" },
+                { name: "Sizzling Sisig (Pork/Tuna)", price: 210, image: "sizzling_sisig.jpg" },
+                { name: "Sizzling Bangus (Boneless)", price: 200, image: "sizzling_bangus.jpg" },
+                { name: "Sizzling Tangigue", price: 260, image: "sizzling_tangigue.jpg" },
+                { name: "Sizzling Bariles", price: 240, image: "sizzling_bariles.jpg" }
             ],
+            "Kambingan": [
+                { name: "Papaitan", price: 260, image: "papaitan.jpg" },
+                { name: "Adobo Kambing", price: 345, image: "adobo_kambing.jpg" },
+                { name: "Caldereta", price: 345, image: "Caldereta.jpg", bestSeller: true }
+            ],
+            "Pulutan": [
+                { name: "Chicharon Bulaklak", price: 230,image: "chicharon_bulaklak.jpg"  },
+                { name: "Kinilaw (Fish)", price: 300, image: "kinilaw.jpg"  },
+                { name: "Calamares", price: 260, image: "calamares.jpg"  },
+                { name: "Camaron Rebosado", price: 260, image: "rebosado.jpg"  },
+                { name: "Sinugba (Pork)", price: 260, image: "sinugba.jpg" },
+                { name: "Sinuglaw", price: 445, image: "sinuglaw.jpg"  },
+                { name: "Patatim", price: 550, image: "patatim.jpg"  },
+                { name: "Crispy Pata", price: 550, image: "crispy_pata.jpg" ,bestSeller: true },
+                { name: "Garlic Mushroom", price: 180,image: "garlic_mushroom.jpg"  },
+                { name: "Sashime", price: 290, image: "Sashime.jpg"  }
+            ],
+            "Drinks": [
+                { name: "Coke Light", price: 75, image: "coke.jpg"  },
+                { name: "Coke in Can", price: 75, image: "coke_can.jpg"  },
+                { name: "Sprite in Can", price: 75, image: "sprite_can.jpg" },
+                { name: "Royal in Bottle", price: 30,image: "royal_bottle.jpg"  },
+                { name: "Sprite in Bottle", price: 30,image: "sprite_bottle.jpg"  },
+                { name: "Coke in Bottle", price: 30, image: "coke_bottle.jpg"  },
+                { name: "Mineral Water 1L", price: 40, image: "water.jpg"  },
+                { name: "C2 Green Tea", price: 30, image: "c2.jpg"  },
+                { name: "Gatorade", price: 70, image: "gatorated.jpg"  },
+                { name: "Iced Tea", price: 30, image: "iced_tea.jpg" },
+                { name: "Hot Tea", price: 30, image: "hot_tea.jpg" },
+                { name: "Brewed Coffee", price: 75, image: "brewed_coffe.jpg"  },
+                { name: "Milo", price: 30, image: "milo.jpg"  },
+                { name: "Coffee w/ Cream", price: 30, image: "coffee.jpg"  },
+                { name: "Mango Juice", price: 70, image: "mango_juice.jpg"  },
+                { name: "Four Seasons", price: 70, image: "fourseson.jpg"  },
+                { name: "Pineapple Juice", price: 70, image: "pineapple.jpg"  },
+                { name: "Pineapple Orange Juice", price: 70, image: "porange.jpg"  },
+                { name: "Flavored Shake", price: 70, image: "Shake.jpg"  }
+            ],
+            
             "Beverages": [
                 { name: "Iced Tea", price: 50, image: "icedtea.jpg" },
                 { name: "Calamansi Juice", price: 45, image: "calamansi-juice.jpg" },
@@ -114,12 +81,40 @@
                 { name: "Mango Shake", price: 70, image: "mangoshake.jpg" }
             ],
             "Rice": [
-                { name: "Plain Rice", price: 20, image: "plainrice.jpg" },
-                { name: "Garlic Rice", price: 30, image: "garlicrice.jpg" },
-                { name: "Fried Rice", price: 50, image: "friedrice.jpg" },
-                { name: "Brown Rice", price: 40, image: "brownrice.jpg" },
-                { name: "Sticky Rice", price: 60, image: "stickyrice.jpg" }
-            ],
+                { name: "Shanghai Rice / Platter", price: 240, image: "plainrice.jpg" },
+                { name: "Garlic Rice / Platter", price: 150, image: "garlicrice.jpg" },
+                { name: "Fried Rice / Platter", price: 150, image: "friedrice.jpg" },
+                { name: "Plain Rice / Platter", price: 135, image: "brownrice.jpg" },
+                { name: "Garlic Rice / Cup", price: 48, image: "stickyrice.jpg" },
+                { name: "Fried Rice / Cup", price: 48, image: "stickyrice.jpg" },
+                { name: "Plain Rice / Rice", price: 25, image: "stickyrice.jpg" }
+        ],
+        "Vagetable": [
+                { name: "Four Season", price: 290, image: "plainrice.jpg" },
+                { name: "Vegetable Puyong", price: 190, image: "garlicrice.jpg" },
+                { name: "Chopsuy", price: 240, image: "friedrice.jpg" },
+                { name: "Crispy Kangkong", price: 175, image: "brownrice.jpg" },
+                { name: "Adobong Kangkong", price: 175, image: "stickyrice.jpg" },
+                { name: "Ampalaya w/Beef", price: 190, image: "stickyrice.jpg" },
+                { name: "Pechay Guisado", price: 160, image: "stickyrice.jpg" },
+                { name: "Pinakbet w/ Bagoong", price: 240, image: "stickyrice.jpg" }
+
+        ],
+        "Pork": [
+                { name: "Adobong Baboy", price: 240, image: "plainrice.jpg" },
+                { name: "Pork Afritada", price: 240, image: "garlicrice.jpg" },
+                { name: "Mixed Afritada", price: 240, image: "friedrice.jpg" },
+                { name: "Sweet & Sour Pork", price: 240, image: "brownrice.jpg" },
+                { name: "Pork Caldereta", price: 240, image: "stickyrice.jpg" },
+                { name: "Pork Liver", price: 240, image: "stickyrice.jpg" },
+                { name: "Fried/Grilled Pork Chop", price: 240, image: "stickyrice.jpg" },
+                { name: "Lechon Kawali", price: 240, image: "stickyrice.jpg" }
+
+        ],
+            
+
+
+            
             "Desserts": [
                 { name: "Halo-Halo", price: 120, image: "halohalo.jpg" },
                 { name: "Leche Flan", price: 90, image: "lecheflan.jpg" },
@@ -182,6 +177,7 @@
             cart.splice(index, 1);
             updateCart();
         }
+        
         
         function confirmOrder() {
             if (cart.length === 0) {
